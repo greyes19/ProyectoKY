@@ -1,0 +1,95 @@
+﻿@model ProyectoPrueba.Models.Orders
+
+
+<label>@Html.DisplayFor(model => model.Customers.ContactName) - @Html.DisplayFor(model => model.OrderID)</label>
+
+
+@using (Html.BeginForm("Confirmar", "Orders", FormMethod.Post))
+{
+
+    <div class="row">
+        <div class="col-md-12">
+            @Html.HiddenFor(p => p.OrderID);
+ 
+           
+            <table class="table">
+                <tr>
+                    <th>
+                        Codigo
+                    </th>
+                    <th>
+                        Descripcion
+                    </th>
+                    <th>
+                        Cantidad
+                    </th>
+                    <th>
+                        Precio
+                    </th>
+                    <th>
+                        total
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Order_Details)
+                {
+                    <tr>
+                        <td>@item.ProductID</td>
+                        <td>@item.Products.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Products.UnitPrice), 2)</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Quantity * item.Products.UnitPrice), 2)</td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group" style="width: 250px;">
+                <div class='input-group date' id='datetimepicker1'>
+                    <!--<input class="form-control" type="text" id="DateConfirmation" name="DateConfirmation" value= "@Html.DisplayFor(model => model.DateConfirmation)" />-->
+                    @Html.EditorFor(model =>model.DateConfirmation, new {htmlAttributes= new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DateConfirmation, "",new { @class = "text-danger"})
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label>Total:</label>
+                <input type="text" name="total" value="@Model.Order_Details.Sum(t => Math.Round(Convert.ToDouble(t.Quantity * t.Products.UnitPrice), 2))" disabled />
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label>Comentario:</label>
+                @Html.TextAreaFor(model => model.Coments, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Coments, "", new { @class = "text-danger" })
+                <!--<textarea id="Coments" name="Coments" class="form-control">@Html.DisplayFor(model => model.Coments)</textarea>-->
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <!--<a href="Order/Confirmar/" id="confirmarOrden" class="btn btn-primary">Confirmar</a>-->
+                <input type="submit" class="btn btn-primary" value="Guardar" />
+            </div>
+        </div>
+
+
+    </div>
+}
+    <script type="text/javascript">
+        $(function () {
+            $('#DateConfirmation').datetimepicker();
+        });
+    </script>

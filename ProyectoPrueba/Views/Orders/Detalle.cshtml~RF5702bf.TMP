@@ -1,0 +1,53 @@
+﻿@model ProyectoPrueba.Models.Orders
+
+
+    <label>@Html.DisplayFor(model => model.Customers.ContactName) - @Html.DisplayFor(model => model.OrderID)</label>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>
+                        Codigo
+                    </th>
+                    <th>
+                        Descripcion
+                    </th>
+                    <th>
+                        Cantidad
+                    </th>
+                    <th>
+                        Precio
+                    </th>
+                    <th>
+                        total
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Order_Details)
+                {
+                    <tr>
+                        <td>@item.ProductID</td>
+                        <td>@item.Products.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Products.UnitPrice</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Quantity * item.Products.UnitPrice), 2)</td>
+                    </tr>
+                  
+                        }
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label>Fecha de confirmación:</label>
+            <input type="text" name="dateConfirmation" id="dateConfirmation"  />
+        </div>
+        <div class="col-md-6">
+            <label>Total:</label>
+            <input type="text" name="total" value="@Model.Order_Details.Sum(t => t.Quantity)" />
+        </div>
+    </div>

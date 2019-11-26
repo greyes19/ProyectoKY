@@ -1,0 +1,99 @@
+﻿@model IEnumerable<ProyectoPrueba.Models.Orders>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Lista de Ordenes</h2>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table" id="pedidos">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Nombre/Razón Social</th>
+                    <th>Telefono</th>
+                    <th>Estado</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.OrderID</td>
+                        <td>@item.OrderDate</td>
+                        <td>@item.Customers.ContactName</td>
+                        <td>@item.Customers.Phone</td>
+                        @if (item.Status == 0)
+                        {
+                            <td>Pendiente</td> }
+                        else
+                        {
+                            <td>Confirmado</td>}
+
+                        <td><a href="#" id="verDetalle" class="btn btn-default btnDetalle" data-value="@item.OrderID" onclick="obtenerDetalle(this)">Detalle</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dissmiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"> Detalle de Pedidos</h4>
+            </div>
+            <div class="modal-body">
+                <div id="containsDetalle"></div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal .modal-dialog {
+        width :43%
+    }
+
+</style>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            console.log("entra a script");
+
+
+            $("#pedidos").DataTable({
+                "ordering": false
+            });
+           
+            /*$(".btnDetalle").on("click",function () {
+                console.log("entra aqui");
+                var id = parseInt($(this).data("value"));
+                console.log("id: "+id);
+                $("#containsDetalle").load("/Pedidos/Detalle/"+id,
+                    function () {
+                        $("#mymodal").modal("show");
+                    });
+            });*/
+        });
+
+        function obtenerDetalle(elemento) {
+            console.log("entra aqui");
+            var id = parseInt($(elemento).data("value"));
+            console.log("id: " + id);
+            $("#containsDetalle").load("Orders/Detalle/" + id,
+                function () {
+                    $("#mymodal").modal("show");
+                });
+        }
+    </script>
+}
